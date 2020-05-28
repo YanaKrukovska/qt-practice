@@ -4,8 +4,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-TARGET = QTree
-
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -19,16 +17,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     contact.cpp \
+    finddialog.cpp \
     main.cpp \
-    widget.cpp
+    mainwindow.cpp \
+    telephonebook.cpp
 
 HEADERS += \
     contact.h \
-    widget.h
+    finddialog.h \
+    mainwindow.h \
+    telephonebook.h
 
 FORMS += \
-    mainwindow.ui \
-    widget.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
