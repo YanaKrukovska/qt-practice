@@ -5,40 +5,84 @@ FindDialog::FindDialog(QWidget *parent)
         : QDialog(parent)
 {
     QLabel *findLabel = new QLabel(tr("Enter the name of a contact:"));
-    lineEdit = new QLineEdit;
+    nameInputField = new QLineEdit;
 
-    findButton = new QPushButton(tr("&Find"));
-    findText = "";
+    findByNameButton = new QPushButton(tr("&Find by name"));
+    findByNameText = "";
 
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(findLabel);
-    layout->addWidget(lineEdit);
-    layout->addWidget(findButton);
+    QLabel *findByTextLabel = new QLabel(tr("or enter the number of a contact:"));
+    findByNumberButton =  new QPushButton(tr("&Find by number"));
+    numberInputField = new QLineEdit;
+    findByNumberText = "";
+
+    QGridLayout *layout = new QGridLayout;
+    layout->addWidget(findLabel, 0, 0);
+    layout->addWidget(nameInputField, 0, 1);
+    layout->addWidget(findByNameButton, 0, 2);
+
+    layout->addWidget(findByTextLabel, 1, 0);
+    layout->addWidget(numberInputField, 1,1);
+    layout->addWidget(findByNumberButton, 1, 2);
+
 
     setLayout(layout);
     setWindowTitle(tr("Find a Contact"));
-    connect(findButton, &QPushButton::clicked,
-            this, &FindDialog::findClicked);
-    connect(findButton, &QPushButton::clicked,
+    connect(findByNameButton, &QPushButton::clicked,
+            this, &FindDialog::findByNameClicked);
+    connect(findByNameButton, &QPushButton::clicked,
+            this, &FindDialog::accept);
+
+    connect(findByNumberButton, &QPushButton::clicked,
+            this, &FindDialog::findByNumberClicked);
+    connect(findByNumberButton, &QPushButton::clicked,
             this, &FindDialog::accept);
 }
 
-void FindDialog::findClicked()
+void FindDialog::findByNameClicked()
 {
-    QString text = lineEdit->text();
+    QString text = nameInputField->text();
 
     if (text.isEmpty()) {
         QMessageBox::information(this, tr("Empty Field"),
                                  tr("Please enter a name."));
         return;
     } else {
-        findText = text;
-        lineEdit->clear();
+        findByNameText = text;
+        nameInputField->clear();
+        hide();
+    }
+}
+void FindDialog::setFindByNameTextEmpty(){
+    findByNameText = "";
+}
+
+void FindDialog::setFindByNumberTextEmpty(){
+    findByNumberText = "";
+}
+
+void FindDialog::findByNumberClicked()
+{
+    QString text = numberInputField->text();
+
+    if (text.isEmpty()) {
+        QMessageBox::information(this, tr("Empty Field"),
+                                 tr("Please enter a number."));
+        return;
+    } else {
+        findByNumberText = text;
+        numberInputField->clear();
         hide();
     }
 }
 
-QString FindDialog::getFindText()
+
+QString FindDialog::getFindByNameText()
 {
-    return findText;
+    return findByNameText;
 }
+
+QString FindDialog::getFindByNumberText()
+{
+    return findByNumberText;
+}
+

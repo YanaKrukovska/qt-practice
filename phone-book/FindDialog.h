@@ -14,15 +14,25 @@ class FindDialog : public QDialog
 
 public:
     FindDialog(QWidget *parent = nullptr);
-    QString getFindText();
+    QString getFindByNameText();
+    QString getFindByNumberText();
+    void setFindByNameTextEmpty();
+    void setFindByNumberTextEmpty();
+
 
 public slots:
-            void findClicked();
+    void findByNameClicked();
+    void findByNumberClicked();
+
 
 private:
-    QPushButton *findButton;
-    QLineEdit *lineEdit;
-    QString findText;
+    QPushButton *findByNameButton;
+    QLineEdit *nameInputField;
+    QString findByNameText;
+
+    QPushButton *findByNumberButton;
+    QLineEdit *numberInputField;
+    QString findByNumberText;
 };
 
 #endif

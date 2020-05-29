@@ -21,6 +21,8 @@ public:
     TelephoneBook(QWidget *parent = nullptr);
     enum Mode { NavigationMode, AddingMode, EditingMode, AddingNumberMode };
 
+    void writeAllNumbers(QString contactName);
+
 public slots:
             void addContact();
     void editContact();
@@ -48,13 +50,13 @@ private:
 
 
     QLineEdit *nameLine;
-    QTextEdit *addressText;
+    QTextEdit *phoneNumberLine;
 
     QMultiMap<QString, QString> contacts;
 
     FindDialog *dialog;
     QString oldName;
-    QString oldAddress;
+    QString oldPhoneNumber;
     Mode currentMode;
 };
 
