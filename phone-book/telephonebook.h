@@ -22,6 +22,7 @@ public:
     enum Mode { NavigationMode, AddingMode, EditingMode, AddingNumberMode };
 
     void writeAllNumbers(QString contactName);
+    bool checkIfContactAlreadyExists(QString number);
 
 public slots:
             void addContact();

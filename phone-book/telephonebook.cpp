@@ -106,7 +106,11 @@ void TelephoneBook::addNumberToContact()
     oldPhoneNumber = phoneNumberLine->toPlainText();
     QString text = QInputDialog::getText(this,tr("Adding new number"),tr("New number: "));
     if (!text.isEmpty()){
-        contacts.insert(oldName, text);
+
+        if (checkIfContactAlreadyExists(text) != 1){
+            contacts.insert(oldName, text);
+        }
+
         writeAllNumbers(oldName);
     } else {
         QMessageBox::information(this, tr("Empty Field"),
@@ -126,6 +130,24 @@ void TelephoneBook::editContact()
     updateInterface(EditingMode);
 }
 
+bool TelephoneBook::checkIfContactAlreadyExists(QString number){
+    foreach (QString key, contacts.keys())
+    {
+        QList<QString> values = contacts.values(key);
+
+        foreach (QString value, values)
+        {
+            if (QString::compare(value, number, Qt::CaseInsensitive) == 0){
+                QMessageBox::information(this, tr("Can't add this number"),
+                                         tr("Another contact is already linked to this number"));
+                return true;
+            }
+
+        }
+    }
+    return false;
+}
+
 void TelephoneBook::submitContact()
 {
     QString name = nameLine->text();
@@ -139,13 +161,19 @@ void TelephoneBook::submitContact()
 
     if (currentMode == AddingMode) {
         if (!contacts.contains(name)) {
-            contacts.insert(name, phoneNumber);
-            QMessageBox::information(this, tr("Successful"),
-                                     tr("Added \"%1\ to your telephone book.").arg(name));
+
+            if (checkIfContactAlreadyExists(phoneNumber) != 1){
+                contacts.insert(name, phoneNumber);
+                QMessageBox::information(this, tr("Successful"),
+                                         tr("Added \"%1\" to your telephone book.").arg(name));
+            }
+
         } else {
             QMessageBox::information(this, tr("Error"),
                                      tr("Sorry, \"%1\" is already in your telephone book.").arg(name));
         }
+
+
     } else if (currentMode == EditingMode) {
         if (oldName != name) {
             if (!contacts.contains(name)) {
@@ -271,6 +299,9 @@ void TelephoneBook::findContact()
                         foundAnswer = 1;
                         break;
                     }
+                    if (foundAnswer){
+                        break;
+                    }
                 }
 
             }
@@ -281,6 +312,8 @@ void TelephoneBook::findContact()
                 dialog->setFindByNumberTextEmpty();
                 return;
             }
+
+            dialog->setFindByNumberTextEmpty();
         }
 
     }
