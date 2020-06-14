@@ -1,52 +1,47 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef HEADER_FENPRINCIPALE
+#define HEADER_FENPRINCIPALE
 
-#include <QMainWindow>
-#include <QList>
-
-class Canvas;
-
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+#include <QtWidgets>
 
 class MainWindow : public QMainWindow
 {
+
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    MainWindow();
+    bool getIsDrawwingEnabled();
+    bool getIsErasingEnabled();
+    bool getIsRectangleEnabled();
+    bool getIsCircleEnabled();
+    bool getIsLineEnabled();
+    bool getIsFillingEnabled();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
 
-private slots:
-    void open();
-    void save();
-    void brushColor();
-    void brushWidth();
+    QColor getColour();
+    int getBrushSize();
+    void setDefaultParameters();
+
+public slots :
+
+            void slotDraw();
+    void slotErase();
+    void slotRectangle();
+    void slotCircle();
+    void slotLine();
+    void slotFill();
+    void slotColour();
+    void slotSize();
 
 private:
-    void createActions();
-    void createMenus();
-
-    bool maybeSave();
-    bool saveFile(const QByteArray &fileFormat);
-
-    Canvas *canvasArea;
-    QMenu *saveAsMenu;
-    QMenu *fileMenu;
-    QMenu *optionMenu;
-
-    QAction *openAction;
-    QList<QAction *> saveAsActionsList;
-    QAction *setBrushColorAction;
-    QAction *setBrushWidthAction;
-    QAction *exitAction;
-    QAction *clearAction;
-
-
-;    Ui::MainWindow *ui;
+    bool isDrawingEnabled;
+    bool isErasingEnabled;
+    bool isRectangleEnable;
+    bool isCircleEnabled;
+    bool isLineEnabled;
+    bool isFillingEnabled;
+    int brushSize;
+    QColor colour;
 };
-#endif // MAINWINDOW_H
+
+#endif

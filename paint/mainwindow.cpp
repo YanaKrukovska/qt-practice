@@ -1,170 +1,198 @@
-#include <QtWidgets>
-
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "canvas.h"
+#include "canvascreator.h"
+#include <QInputDialog>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+void MainWindow::setDefaultParameters()
 {
-    ui->setupUi(this);
-    canvasArea = new Canvas;
-    setCentralWidget(canvasArea);
-    createActions();
-    createMenus();
-    setWindowTitle(tr("Paint"));
-    resize(500, 500);
+    isDrawingEnabled = 1;
+    isRectangleEnable = 0;
+    isCircleEnabled = 0;
+    isLineEnabled = 0;
+    isFillingEnabled=0;
+    isErasingEnabled=0;
+    brushSize = 1;
 }
 
-MainWindow::~MainWindow()
+MainWindow::MainWindow()
 {
-    delete ui;
+    resize(500,500);
+    setDefaultParameters();
+
+    Canvas *canvas = new Canvas(this);
+    CanvasCreator *fenetretaille = new CanvasCreator(canvas);
+    setCentralWidget(canvas);
+
+    QMenu *menuFile= menuBar()->addMenu("File");
+    QAction *newFileAction = new QAction("New",this);
+    menuFile->addAction(newFileAction);
+    QAction *saveFileAction = new QAction("Save",this);
+    menuFile->addAction(saveFileAction);
+    QAction *openFileAction = new QAction("Open",this);
+    menuFile->addAction(openFileAction);
+
+    connect(newFileAction,SIGNAL(triggered(bool)),fenetretaille,SLOT(showCanvas()));
+    connect(saveFileAction,SIGNAL(triggered(bool)),canvas,SLOT(saveCanvasArea()));
+    connect(openFileAction,SIGNAL(triggered(bool)),canvas,SLOT(openCanvasArea()));
+
+    QToolBar *toolBar = addToolBar("Tools");
+    QToolButton *colourButton = new QToolButton;
+    colourButton->setText("Colour");
+    toolBar->addWidget(colourButton);
+
+    QToolButton *brushSizeButton = new QToolButton;
+    brushSizeButton->setText("Brush Size");
+    toolBar->addWidget(brushSizeButton);
+
+
+    QToolButton *brushButton = new QToolButton;
+    brushButton->setText("Brush");
+    toolBar->addWidget(brushButton);
+
+
+    QToolButton *eraserButton = new QToolButton;
+    eraserButton->setText("Eraser");
+    toolBar->addWidget(eraserButton);
+
+    QToolButton *lineButton = new QToolButton;
+    lineButton->setText("Line");
+    toolBar->addWidget(lineButton);
+
+    QToolButton *circleButton = new QToolButton;
+    circleButton->setText("Circle");
+    toolBar->addWidget(circleButton);
+
+
+    QToolButton *rectangleButton = new QToolButton;
+    rectangleButton->setText("Rectangle");
+    toolBar->addWidget(rectangleButton);
+
+    QToolButton *fillButton = new QToolButton;
+    fillButton->setText("Fill");
+    toolBar->addWidget(fillButton);
+
+
+    QToolButton *undoButton = new QToolButton;
+    undoButton->setText("Undo");
+    undoButton->setShortcut(QKeySequence("Ctrl+Z"));
+    toolBar->addWidget(undoButton);
+
+    connect(colourButton,SIGNAL(clicked(bool)),this,SLOT(slotColour()));
+    connect(fillButton,SIGNAL(clicked(bool)),this,SLOT(slotFill()));
+    connect(lineButton,SIGNAL(clicked(bool)),this,SLOT(slotLine()));
+    connect(brushButton,SIGNAL(clicked(bool)),this,SLOT(slotDraw()));
+    connect(eraserButton,SIGNAL(clicked(bool)),this,SLOT(slotErase()));
+    connect(circleButton,SIGNAL(clicked(bool)),this,SLOT(slotCircle()));
+    connect(rectangleButton,SIGNAL(clicked(bool)),this,SLOT(slotRectangle()));
+    connect(brushSizeButton,SIGNAL(clicked(bool)),this,SLOT(slotSize()));
+    connect(undoButton,SIGNAL(clicked(bool)),canvas,SLOT(undoCanvasArea()));
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+bool MainWindow::getIsDrawwingEnabled()
 {
-    if(maybeSave()){
-        event->accept();
-    } else {
-        event->ignore();
-    }
+    return isDrawingEnabled;
+}
+bool MainWindow::getIsErasingEnabled()
+{
+    return isErasingEnabled;
+}
+bool MainWindow::getIsRectangleEnabled()
+{
+    return isRectangleEnable;
+}
+bool MainWindow::getIsCircleEnabled()
+{
+    return isCircleEnabled;
+}
+bool MainWindow::getIsLineEnabled()
+{
+    return isLineEnabled;
 }
 
-void MainWindow::open()
+bool MainWindow::getIsFillingEnabled()
 {
-    if(maybeSave()){
-        QString fileName = QFileDialog::getOpenFileName(this,
-                                                        tr("Open File"),
-                                                        QDir::currentPath());
-
-        if(!fileName.isEmpty()){
-            canvasArea->openImage((fileName));
-        }
-
-    }
+    return isFillingEnabled;
 }
 
-void MainWindow::save()
+QColor MainWindow::getColour()
 {
-    QAction *action = qobject_cast<QAction *>(sender());
-    QByteArray fileFormat = action->data().toByteArray();
-    saveFile(fileFormat);
+    return colour;
+}
+int MainWindow::getBrushSize()
+{
+    return brushSize;
 }
 
-void MainWindow::brushColor()
+void MainWindow::slotDraw()
 {
-    QColor newColor = QColorDialog::getColor(canvasArea->brushColor());
-    if(newColor.isValid()){
-        canvasArea->setBrushColor(newColor);
-    }
+    isDrawingEnabled = 1;
+    isErasingEnabled = 0;
+    isRectangleEnable = 0;
+    isCircleEnabled = 0;
+    isFillingEnabled = 0;
+    isLineEnabled = 0;
 }
 
-void MainWindow::brushWidth()
+void MainWindow::slotErase()
+{
+    isErasingEnabled = 1;
+    isDrawingEnabled = 0;
+    isRectangleEnable = 0;
+    isCircleEnabled = 0;
+    isFillingEnabled = 0;
+    isLineEnabled = 0;
+}
+
+void MainWindow::slotRectangle()
+{
+    isDrawingEnabled = 0;
+    isRectangleEnable = 1;
+    isCircleEnabled = 0;
+    isFillingEnabled = 0;
+    isLineEnabled = 0;
+    isErasingEnabled = 0;
+}
+void MainWindow::slotCircle()
+{
+    isDrawingEnabled = 0;
+    isRectangleEnable = 0;
+    isCircleEnabled = 1;
+    isFillingEnabled = 0;
+    isLineEnabled = 0;
+    isErasingEnabled = 0;
+}
+void MainWindow::slotFill()
+{
+    isDrawingEnabled = 0;
+    isRectangleEnable = 0;
+    isCircleEnabled = 0;
+    isFillingEnabled = 1;
+    isLineEnabled = 0;
+    isErasingEnabled = 0;
+}
+
+void MainWindow::slotLine()
+{
+    isDrawingEnabled = 0;
+    isRectangleEnable = 0;
+    isCircleEnabled = 0;
+    isFillingEnabled = 0;
+    isLineEnabled = 1;
+    isErasingEnabled = 0;
+}
+
+void MainWindow::slotColour()
+{   colour = QColorDialog::getColor(colour);
+}
+
+void MainWindow::slotSize()
 {
     bool ok;
-    // min=1, max=50, step=1
-    int newWidth = QInputDialog::getInt(this,
-                                        tr("Draw"),
-                                        tr("Select brush width: "),
-                                        canvasArea->penWidth(),
+    int newWidth = QInputDialog::getInt(this, tr("Brush Size"),tr("Select brush size (1-50):"), brushSize,
                                         1, 50, 1, &ok);
-    if(ok){
-        canvasArea->setBrushWidth(newWidth);
+    if (ok){
+        brushSize = newWidth;
     }
 }
-
-
-void MainWindow::createActions()
-{
-    openAction = new QAction(tr("&Open..."), this);
-    openAction->setShortcuts(QKeySequence::Open);
-    connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
-
-    foreach (QByteArray format, QImageWriter::supportedImageFormats()) {
-        QString text = tr("%1...").arg(QString(format).toUpper());
-        QAction *action = new QAction(text, this);
-        action->setData(format);
-        connect(action, SIGNAL(triggered()), this, SLOT(save()));
-        saveAsActionsList.append(action);
-    }
-
-
-    exitAction = new QAction(tr("&Exit"), this);
-    exitAction->setShortcut(QKeySequence::Quit);
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
-
-    setBrushColorAction = new QAction(tr("&Pen Color..."), this);
-    connect(setBrushColorAction, SIGNAL(triggered()), this, SLOT(brushColor()));
-
-    setBrushWidthAction = new QAction(tr("&Pen Width..."), this);
-    connect(setBrushWidthAction, SIGNAL(triggered()), this, SLOT(brushWidth()));
-
-    clearAction = new QAction(tr("&Clear Screen..."), this);
-    clearAction->setShortcut(tr("Ctrl+L"));
-    connect(clearAction, SIGNAL(triggered()), canvasArea, SLOT(clearImage()));
-}
-
-void MainWindow::createMenus()
-{
-    saveAsMenu = new QMenu(tr("&Save As"), this);
-    foreach(QAction *action, saveAsActionsList){
-        saveAsMenu->addAction(action);
-    }
-
-    fileMenu = new QMenu(tr("&File"), this);
-    fileMenu->addAction(openAction);
-    fileMenu->addMenu(saveAsMenu);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAction);
-
-    optionMenu = new QMenu(tr("&Options"), this);
-    optionMenu->addAction(setBrushColorAction);
-    optionMenu->addAction(setBrushWidthAction);
-    optionMenu->addSeparator();
-    optionMenu->addAction(clearAction);
-
-
-    menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(optionMenu);
-}
-
-bool MainWindow::maybeSave()
-{
-    if(canvasArea->isModified()){
-        QMessageBox::StandardButton ret;
-        ret = QMessageBox::warning(this, tr("Paint"),
-                                   tr("The image has been modified.\n"
-                                      "Do you want to save your changes?"),
-                                   QMessageBox::Save |
-                                   QMessageBox::Discard |
-                                   QMessageBox::Cancel);
-
-        if(ret == QMessageBox::Save){
-            return saveFile("png");
-        } else if (ret == QMessageBox::Cancel){
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool MainWindow::saveFile(const QByteArray &fileFormat)
-{
-    QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
-
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
-                                                    initialPath,
-                                                    tr("&1 Files (*.%2;; All Files(*")
-                                                    .arg(QString::fromLatin1(fileFormat.toUpper()))
-                                                    .arg(QString::fromLatin1(fileFormat)));
-    if(fileName.isEmpty()){
-        return false;
-    } else {
-        return canvasArea->saveImage(fileName, fileFormat.constData());
-    }
-}
-
 
 
