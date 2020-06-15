@@ -1,9 +1,8 @@
+#ifndef CANVAS_H
+#define CANVAS_H
 
-#ifndef CANVASAREA
-#define CANVASAREA
-#include <QtWidgets>
 #include <mainwindow.h>
-
+#include <QtWidgets>
 
 class Canvas : public QWidget
 {
@@ -38,42 +37,25 @@ public slots:
     void undoCanvasArea();
 
 private :
-    int pixCur;
-    int xMax;
-    int yMax;
+    int currentPixel;
 
     int xMove;
     int yMove;
-    int xPress;
-    int yPress;
-    int xRelease;
-    int yRelease;
+    int xPressed;
+    int yPressed;
+    int xReleased;
+    int yReleased;
+    int xMax;
+    int yMax;
 
     QPainter *painter;
     QLabel *label;
+    QImage *image;
     MainWindow *window;
     QGraphicsScene *scene;
     QGraphicsView *view;
-    QImage *image;
-    QVector<QPixmap*> mapPixels;
+    QVector<QPixmap*> canvasPixels;
     QPainterPath *path;
 };
 
-class Point{
-public:
-    Point(int a,int b) : x(a),y(b) {}
-    ~Point();
-    int getX()
-    {
-        return x;
-    }
-    int getY()
-    {
-        return y;
-    }
-
-private:
-    int x;
-    int y;
-};
 #endif

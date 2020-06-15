@@ -1,7 +1,7 @@
-#include "canvascreator.h"
+#include "CanvasCreator.h"
 
-int CanvasCreator::width = 900;
-int CanvasCreator::height = 900;
+int CanvasCreator::width = 800;
+int CanvasCreator::height = 800;
 
 CanvasCreator::CanvasCreator(Canvas *CanvasArea) : QWidget()
 {
@@ -14,8 +14,8 @@ CanvasCreator::CanvasCreator(Canvas *CanvasArea) : QWidget()
     QVBoxLayout *layout = new QVBoxLayout(this);
     QFormLayout *form = new QFormLayout;
 
-    form->addRow("Width:",widthLabel);
-    form->addRow("Height:",heightLabel);
+    form->addRow("Width:", widthLabel);
+    form->addRow("Height:", heightLabel);
 
     getWidthButton = new QPushButton("Set width");
     getHeightButton = new QPushButton("Set Height");
@@ -41,22 +41,22 @@ void CanvasCreator::showCanvas()
 void CanvasCreator::getWidthInput()
 {
     bool ok;
-    int newWidth = QInputDialog::getInt(this, tr("Canvas width"),tr("Select canvas width (1-900):"), width,
-                                        1, 900, 1, &ok);
+    int newWidth = QInputDialog::getInt(this, tr("Canvas width"),tr("Select canvas width (1-800):"), width,
+                                        1, 800, 1, &ok);
     if (ok){
         CanvasCreator::width = newWidth;
-        widthLabel->setText(tr("\%1").arg( CanvasCreator::width));
+        widthLabel->setText(tr("%1").arg( CanvasCreator::width));
     }
 
 }
 void CanvasCreator::getHeightInput()
 {
     bool ok;
-    int newHeight = QInputDialog::getInt(this, tr("Canvas height"),tr("Select canvas height (1-900):"), width,
-                                         1, 900, 1, &ok);
+    int newHeight = QInputDialog::getInt(this, tr("Canvas height"),tr("Select canvas height (1-800):"), width,
+                                         1, 800, 1, &ok);
     if (ok){
         CanvasCreator::height = newHeight;
-        heightLabel->setText(tr("\%1").arg(CanvasCreator::height));
+        heightLabel->setText(tr("%1").arg(CanvasCreator::height));
     }
 }
 

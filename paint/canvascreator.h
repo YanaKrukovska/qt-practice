@@ -1,20 +1,20 @@
-#ifndef HEADER_FENTAILLE
-#define HEADER_FENTAILLE
+#ifndef CANVASCREATOR_H
+#define CANVASCREATOR_H
 
-#include <QtWidgets>
 #include <canvas.h>
+#include <QtWidgets>
 
 class CanvasCreator : public QWidget
 {
     Q_OBJECT
 
 public:
-     CanvasCreator(Canvas *canvas );
-     int getWidth();
-     int getHeight();
+    CanvasCreator(Canvas *canvas );
+    int getWidth();
+    int getHeight();
 
 public slots:
-    void showCanvas();
+            void showCanvas();
     void getWidthInput();
     void getHeightInput();
 

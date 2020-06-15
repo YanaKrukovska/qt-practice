@@ -1,26 +1,25 @@
 #include <canvas.h>
-#include "canvascreator.h"
+#include "CanvasCreator.h"
 
 
-Canvas::Canvas(MainWindow *p) : QWidget()
+Canvas::Canvas(MainWindow *parent) : QWidget()
 {
-    window = p;
+    window = parent;
     xMax = 800;
     yMax = 800;
     label = new QLabel(this);
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = mapPixels.size()-1;
-    mapPixels[pixCur]->fill();
-    painter = new QPainter(mapPixels[pixCur]);
-    label->setPixmap(*mapPixels[pixCur]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = canvasPixels.size()-1;
+    canvasPixels[currentPixel]->fill();
+    painter = new QPainter(canvasPixels[currentPixel]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 }
 Canvas::~Canvas(){}
 void Canvas::paintEvent(QPaintEvent *event){}
 
-//MOUSE EVENTS
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    if(window->getIsDrawwingEnabled())
+    if(window->getIsDrawingEnabled())
     {
         xMove = event->pos().x();
         yMove = event->pos().y();
@@ -57,41 +56,41 @@ void Canvas::mousePressEvent(QMouseEvent* event)
     if(window->getIsRectangleEnabled()||window->getIsCircleEnabled()
        ||window->getIsFillingEnabled()||window->getIsLineEnabled())
     {
-        xPress = event->pos().x();
-        yPress = event->pos().y();
+        xPressed = event->pos().x();
+        yPressed = event->pos().y();
 
     }
-    if(window->getIsDrawwingEnabled())
+    if(window->getIsDrawingEnabled())
     {
-        mapPixels.push_back(new QPixmap(xMax,yMax));
-        pixCur = pixCur+1;
-        mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+        canvasPixels.push_back(new QPixmap(xMax,yMax));
+        currentPixel = currentPixel+1;
+        canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
         painter->end();
         delete painter;
-        painter = new QPainter(mapPixels[pixCur]);
+        painter = new QPainter(canvasPixels[currentPixel]);
     }
-    if(window->getIsDrawwingEnabled())
+    if(window->getIsDrawingEnabled())
     {
-        xPress = event->pos().x();
-        yPress = event->pos().y();
-        path = new QPainterPath(QPointF(xPress,yPress));
-        path->moveTo(xPress,yPress);
+        xPressed = event->pos().x();
+        yPressed = event->pos().y();
+        path = new QPainterPath(QPointF(xPressed,yPressed));
+        path->moveTo(xPressed,yPressed);
     }
     if(window->getIsErasingEnabled())
     {
-        mapPixels.push_back(new QPixmap(xMax,yMax));
-        pixCur = pixCur+1;
-        mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+        canvasPixels.push_back(new QPixmap(xMax,yMax));
+        currentPixel = currentPixel+1;
+        canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
         painter->end();
         delete painter;
-        painter = new QPainter(mapPixels[pixCur]);
+        painter = new QPainter(canvasPixels[currentPixel]);
     }
     if(window->getIsErasingEnabled())
     {
-        xPress = event->pos().x();
-        yPress = event->pos().y();
-        path = new QPainterPath(QPointF(xPress,yPress));
-        path->moveTo(xPress,yPress);
+        xPressed = event->pos().x();
+        yPressed = event->pos().y();
+        path = new QPainterPath(QPointF(xPressed,yPressed));
+        path->moveTo(xPressed,yPressed);
     }
 
 }
@@ -99,33 +98,30 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if(window->getIsRectangleEnabled())
     {
-        xRelease = event->pos().x();
-        yRelease = event->pos().y();
+        xReleased = event->pos().x();
+        yReleased = event->pos().y();
         drawRectangle();
-
     }
     if(window->getIsCircleEnabled())
     {
-        xRelease = event->pos().x();
-        yRelease = event->pos().y();
+        xReleased = event->pos().x();
+        yReleased = event->pos().y();
         drawCircle();
 
     }
     if(window->getIsLineEnabled())
     {
-        xRelease = event->pos().x();
-        yRelease = event->pos().y();
+        xReleased = event->pos().x();
+        yReleased = event->pos().y();
         drawLine();
-
     }
     if(window->getIsFillingEnabled())
     {
-        xRelease = event->pos().x();
-        yRelease = event->pos().y();
+        xReleased = event->pos().x();
+        yReleased = event->pos().y();
         fill();
-
     }
-    if(window->getIsDrawwingEnabled())
+    if(window->getIsDrawingEnabled())
     {
         delete path;
     }
@@ -135,18 +131,18 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
     }
 
 }
-//FUNCTIONS
+
 void Canvas::draw()
 {
     QPen pen;
     path->lineTo(xMove,yMove);
-    pen.setColor(window->getColour());
+    pen.setColor(window->colour);
     pen.setWidth(window->getBrushSize());
     painter->setPen(pen);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->drawPath(*path);
 
-    label->setPixmap(*mapPixels[pixCur]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 }
 
 void Canvas::erase()
@@ -158,7 +154,7 @@ void Canvas::erase()
     painter->setPen(pen);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->drawPath(*path);
-    label->setPixmap(*mapPixels[pixCur]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 }
 
 void Canvas::drawRectangle()
@@ -167,17 +163,17 @@ void Canvas::drawRectangle()
     pen.setColor(window->getColour());
     pen.setWidth(window->getBrushSize());
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
 
     painter->setPen(pen);
-    painter->drawRect(xPress,yPress,xRelease-xPress,yRelease-yPress);
+    painter->drawRect(xPressed,yPressed,xReleased-xPressed,yReleased-yPressed);
 
-    label->setPixmap(*mapPixels[pixCur]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 }
 void Canvas::drawFilledRectangle()
 {
@@ -185,17 +181,17 @@ void Canvas::drawFilledRectangle()
     pen.setColor(window->getColour());
     pen.setWidth(window->getBrushSize());
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
     painter->setPen(pen);
-    painter->drawRect(xPress,yPress,xMove-xPress,yMove-yPress);
-    label->setPixmap(*mapPixels[pixCur]);
-    mapPixels.remove(pixCur);
-    pixCur = mapPixels.size()-1;
+    painter->drawRect(xPressed,yPressed,xMove-xPressed,yMove-yPressed);
+    label->setPixmap(*canvasPixels[currentPixel]);
+    canvasPixels.remove(currentPixel);
+    currentPixel = canvasPixels.size()-1;
 }
 
 void Canvas::drawCircle()
@@ -204,16 +200,16 @@ void Canvas::drawCircle()
     pen.setColor(window->getColour());
     pen.setWidth(window->getBrushSize());
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
 
     painter->setPen(pen);
-    painter->drawEllipse(xPress,yPress,xRelease-xPress,yRelease-yPress);
-    label->setPixmap(*mapPixels[pixCur]);
+    painter->drawEllipse(xPressed,yPressed,xReleased-xPressed,yReleased-yPressed);
+    label->setPixmap(*canvasPixels[currentPixel]);
 }
 void Canvas::drawFilledCircle()
 {
@@ -221,18 +217,18 @@ void Canvas::drawFilledCircle()
     pen.setColor(window->getColour());
     pen.setWidth(window->getBrushSize());
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
 
     painter->setPen(pen);
-    painter->drawEllipse(xPress,yPress,xMove-xPress,yMove-yPress);
-    label->setPixmap(*mapPixels[pixCur]);
-    mapPixels.remove(pixCur);
-    pixCur = mapPixels.size()-1;
+    painter->drawEllipse(xPressed,yPressed,xMove-xPressed,yMove-yPressed);
+    label->setPixmap(*canvasPixels[currentPixel]);
+    canvasPixels.remove(currentPixel);
+    currentPixel = canvasPixels.size()-1;
 }
 
 void Canvas::drawLine()
@@ -241,16 +237,16 @@ void Canvas::drawLine()
     pen.setColor(window->getColour());
     pen.setWidth(window->getBrushSize());
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
 
     painter->setPen(pen);
-    painter->drawLine(xPress,yPress,xRelease,yRelease);
-    label->setPixmap(*mapPixels[pixCur]);
+    painter->drawLine(xPressed,yPressed,xReleased,yReleased);
+    label->setPixmap(*canvasPixels[currentPixel]);
 
 }
 void Canvas::drawFilledLine()
@@ -259,46 +255,48 @@ void Canvas::drawFilledLine()
     pen.setColor(window->getColour());
     pen.setWidth(window->getBrushSize());
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
 
     painter->setPen(pen);
-    painter->drawLine(xPress,yPress,xMove,yMove);
-    label->setPixmap(*mapPixels[pixCur]);
-    mapPixels.remove(pixCur);
-    pixCur = mapPixels.size()-1;
+    painter->drawLine(xPressed,yPressed,xMove,yMove);
+    label->setPixmap(*canvasPixels[currentPixel]);
+    canvasPixels.remove(currentPixel);
+    currentPixel = canvasPixels.size()-1;
 }
 
 void Canvas::fill()
 {
     painter->end();
     delete painter;
-    QRgb colorNeeded,colorCur;
+    QRgb colourChosen;
+    QRgb currentColour;
 
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = pixCur+1;
-    mapPixels[pixCur]->operator =(*mapPixels[pixCur-1]);
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = currentPixel+1;
+    canvasPixels[currentPixel]->operator =(*canvasPixels[currentPixel-1]);
 
     image = new QImage(xMax,yMax,QImage::Format_RGB32);
-    *image = mapPixels[pixCur]->toImage();
-    colorNeeded = image->pixel(xPress,yPress);
-    colorCur = window->getColour().rgb();
-    filling4(xPress,yPress,colorNeeded,colorCur);
-    mapPixels[pixCur]->convertFromImage(*image);
-    painter = new QPainter(mapPixels[pixCur]);
+    *image = canvasPixels[currentPixel]->toImage();
+    colourChosen = image->pixel(xPressed,yPressed);
+    currentColour = window->colour.rgb();
+
+    filling4(xPressed,yPressed,colourChosen,currentColour);
+    canvasPixels[currentPixel]->convertFromImage(*image);
+    painter = new QPainter(canvasPixels[currentPixel]);
     delete image;
-    label->setPixmap(*mapPixels[pixCur]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 }
 
 int Canvas::filling4(int x,int y,QRgb col1, QRgb col2)
 {
     int a,b,i;
     int lastPos;
-    QVector<Point*> lPos;
+    QVector<QPoint*> lPos;
     if(image->pixel(x,y)!= col1)
     {
         return 1;
@@ -307,11 +305,11 @@ int Canvas::filling4(int x,int y,QRgb col1, QRgb col2)
     {
         return 0;
     }
-    lPos.push_back(new Point(x,y));
+    lPos.push_back(new QPoint(x,y));
     while(lPos.empty()==0)
     {
-        a = lPos[lPos.size()-1]->getX();
-        b = lPos[lPos.size()-1]->getY();
+        a = lPos[lPos.size()-1]->x();
+        b = lPos[lPos.size()-1]->y();
         if(a==1||b==1||a==(xMax-1)||b==(yMax-1))
         {
             for(i=0;i<xMax;i++)
@@ -332,20 +330,20 @@ int Canvas::filling4(int x,int y,QRgb col1, QRgb col2)
 
         if(image->pixel(a,b-1)==col1)
         {
-            lPos.push_back(new Point(a,b-1));
+            lPos.push_back(new QPoint(a,b-1));
         }
 
         if(image->pixel(a,b+1)==col1)
         {
-            lPos.push_back(new Point(a,b+1));
+            lPos.push_back(new QPoint(a,b+1));
         }
         if(image->pixel(a+1,b)==col1)
         {
-            lPos.push_back(new Point(a+1,b));
+            lPos.push_back(new QPoint(a+1,b));
         }
         if(image->pixel(a-1,b)==col1)
         {
-            lPos.push_back(new Point(a-1,b));
+            lPos.push_back(new QPoint(a-1,b));
         }
     }
     return 1;
@@ -355,7 +353,7 @@ int Canvas::filling4(int x,int y,QRgb col1, QRgb col2)
 void Canvas::saveCanvasArea()
 {
     QString file = QFileDialog::getSaveFileName(0, "Save image", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
-    mapPixels[pixCur]->save(file);
+    canvasPixels[currentPixel]->save(file);
 }
 
 void Canvas::openCanvasArea()
@@ -363,10 +361,10 @@ void Canvas::openCanvasArea()
     QString file = QFileDialog::getOpenFileName(0,"Open image",QString(),"Images (*.png *.gif *.jpg *.jpeg)");
     painter->end();
     delete painter;
-    mapPixels.remove(pixCur);
-    mapPixels.push_back(new QPixmap(file));
-    painter = new QPainter(mapPixels[pixCur]);
-    label->setPixmap(*mapPixels[pixCur]);
+    canvasPixels.remove(currentPixel);
+    canvasPixels.push_back(new QPixmap(file));
+    painter = new QPainter(canvasPixels[currentPixel]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 
 }
 
@@ -374,32 +372,35 @@ void Canvas::newCanvasArea()
 {
     painter->end();
     delete painter;
-    mapPixels.erase(mapPixels.begin(),mapPixels.end());
+    canvasPixels.erase(canvasPixels.begin(),canvasPixels.end());
     delete label;
 
     CanvasCreator *dialog = new CanvasCreator(this);
     xMax = dialog->getWidth();
     yMax = dialog->getHeight();
 
-
-    mapPixels.push_back(new QPixmap(xMax,yMax));
-    pixCur = mapPixels.size()-1;
-    mapPixels[pixCur]->fill();
+    if (xMax > 300){
+        window->resize(xMax, yMax);
+    }
+    canvasPixels.push_back(new QPixmap(xMax,yMax));
+    currentPixel = canvasPixels.size()-1;
+    canvasPixels[currentPixel]->fill();
 
     label = new QLabel(this);
-    label->setPixmap(*mapPixels[pixCur]);
+    label->setPixmap(*canvasPixels[currentPixel]);
     label->show();
-    painter = new QPainter(mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
 }
 void Canvas::undoCanvasArea()
 {
-    if(pixCur ==0)
+    if(currentPixel ==0){
         return;
-    mapPixels.remove(pixCur);
-    pixCur = mapPixels.size()-1;
+    }
+    canvasPixels.remove(currentPixel);
+    currentPixel = canvasPixels.size()-1;
     painter->end();
     delete painter;
-    painter = new QPainter(mapPixels[pixCur]);
-    label->setPixmap(*mapPixels[pixCur]);
+    painter = new QPainter(canvasPixels[currentPixel]);
+    label->setPixmap(*canvasPixels[currentPixel]);
 
 }

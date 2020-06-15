@@ -1,7 +1,7 @@
-#ifndef HEADER_FENPRINCIPALE
-#define HEADER_FENPRINCIPALE
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include <QtWidgets>
+#include <QMainWindow>
 
 class MainWindow : public QMainWindow
 {
@@ -9,14 +9,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    static QColor colour;
+    static int brushSize;
+
     MainWindow();
-    bool getIsDrawwingEnabled();
+    bool getIsDrawingEnabled();
     bool getIsErasingEnabled();
     bool getIsRectangleEnabled();
     bool getIsCircleEnabled();
     bool getIsLineEnabled();
     bool getIsFillingEnabled();
-
 
     QColor getColour();
     int getBrushSize();
@@ -26,22 +29,21 @@ public slots :
 
             void slotDraw();
     void slotErase();
-    void slotRectangle();
-    void slotCircle();
-    void slotLine();
+    void slotDrawRectangle();
+    void slotDrawCircle();
+    void slotDrawLine();
     void slotFill();
     void slotColour();
     void slotSize();
 
 private:
+
     bool isDrawingEnabled;
     bool isErasingEnabled;
     bool isRectangleEnable;
     bool isCircleEnabled;
     bool isLineEnabled;
     bool isFillingEnabled;
-    int brushSize;
-    QColor colour;
 };
 
 #endif

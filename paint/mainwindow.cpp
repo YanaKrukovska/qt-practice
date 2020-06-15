@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "canvas.h"
-#include "canvascreator.h"
+#include "CanvasCreator.h"
 #include <QInputDialog>
+
+QColor MainWindow::colour = QColorConstants::Black;
+int MainWindow::brushSize = 1;
 
 void MainWindow::setDefaultParameters()
 {
@@ -11,7 +14,6 @@ void MainWindow::setDefaultParameters()
     isLineEnabled = 0;
     isFillingEnabled=0;
     isErasingEnabled=0;
-    brushSize = 1;
 }
 
 MainWindow::MainWindow()
@@ -79,16 +81,16 @@ MainWindow::MainWindow()
 
     connect(colourButton,SIGNAL(clicked(bool)),this,SLOT(slotColour()));
     connect(fillButton,SIGNAL(clicked(bool)),this,SLOT(slotFill()));
-    connect(lineButton,SIGNAL(clicked(bool)),this,SLOT(slotLine()));
+    connect(lineButton,SIGNAL(clicked(bool)),this,SLOT(slotDrawLine()));
     connect(brushButton,SIGNAL(clicked(bool)),this,SLOT(slotDraw()));
     connect(eraserButton,SIGNAL(clicked(bool)),this,SLOT(slotErase()));
-    connect(circleButton,SIGNAL(clicked(bool)),this,SLOT(slotCircle()));
-    connect(rectangleButton,SIGNAL(clicked(bool)),this,SLOT(slotRectangle()));
+    connect(circleButton,SIGNAL(clicked(bool)),this,SLOT(slotDrawCircle()));
+    connect(rectangleButton,SIGNAL(clicked(bool)),this,SLOT(slotDrawRectangle()));
     connect(brushSizeButton,SIGNAL(clicked(bool)),this,SLOT(slotSize()));
     connect(undoButton,SIGNAL(clicked(bool)),canvas,SLOT(undoCanvasArea()));
 }
 
-bool MainWindow::getIsDrawwingEnabled()
+bool MainWindow::getIsDrawingEnabled()
 {
     return isDrawingEnabled;
 }
@@ -125,12 +127,14 @@ int MainWindow::getBrushSize()
 
 void MainWindow::slotDraw()
 {
+
     isDrawingEnabled = 1;
     isErasingEnabled = 0;
     isRectangleEnable = 0;
     isCircleEnabled = 0;
     isFillingEnabled = 0;
     isLineEnabled = 0;
+
 }
 
 void MainWindow::slotErase()
@@ -143,7 +147,7 @@ void MainWindow::slotErase()
     isLineEnabled = 0;
 }
 
-void MainWindow::slotRectangle()
+void MainWindow::slotDrawRectangle()
 {
     isDrawingEnabled = 0;
     isRectangleEnable = 1;
@@ -152,7 +156,7 @@ void MainWindow::slotRectangle()
     isLineEnabled = 0;
     isErasingEnabled = 0;
 }
-void MainWindow::slotCircle()
+void MainWindow::slotDrawCircle()
 {
     isDrawingEnabled = 0;
     isRectangleEnable = 0;
@@ -171,7 +175,7 @@ void MainWindow::slotFill()
     isErasingEnabled = 0;
 }
 
-void MainWindow::slotLine()
+void MainWindow::slotDrawLine()
 {
     isDrawingEnabled = 0;
     isRectangleEnable = 0;
@@ -182,7 +186,8 @@ void MainWindow::slotLine()
 }
 
 void MainWindow::slotColour()
-{   colour = QColorDialog::getColor(colour);
+{
+    colour = QColorDialog::getColor(colour);
 }
 
 void MainWindow::slotSize()
