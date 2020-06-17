@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="MainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>550</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QMenuBar" name="menubar">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="defaultUp">
+      <bool>false</bool>
+     </property>
+     <widget class="QMenu" name="menuFile">
+      <property name="title">
+       <string>&amp;File</string>
+      </property>
+      <addaction name="actionNew"/>
+      <addaction name="actionSave"/>
+      <addaction name="actionOpen"/>
+     </widget>
+     <addaction name="menuFile"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolBar" name="toolbar">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <addaction name="actionColour"/>
+     <addaction name="actionBrush"/>
+     <addaction name="actionBrush_Size"/>
+     <addaction name="actionEraser"/>
+     <addaction name="actionLine"/>
+     <addaction name="actionCircle"/>
+     <addaction name="actionRectangle"/>
+     <addaction name="actionFiller"/>
+     <addaction name="actionUndo"/>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="Canvas" name="centralwidget" native="true"/>
+   </item>
+  </layout>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionColour">
+   <property name="text">
+    <string>Colour</string>
+   </property>
+   <property name="toolTip">
+    <string>choose colour</string>
+   </property>
+  </action>
+  <action name="actionBrush">
+   <property name="text">
+    <string>Brush</string>
+   </property>
+   <property name="toolTip">
+    <string>Turn on brush mode</string>
+   </property>
+  </action>
+  <action name="actionBrush_Size">
+   <property name="text">
+    <string>Brush Size</string>
+   </property>
+   <property name="toolTip">
+    <string>choose brush size</string>
+   </property>
+  </action>
+  <action name="actionEraser">
+   <property name="text">
+    <string>Eraser</string>
+   </property>
+   <property name="toolTip">
+    <string>choose erasing mode</string>
+   </property>
+  </action>
+  <action name="actionLine">
+   <property name="text">
+    <string>Line</string>
+   </property>
+   <property name="toolTip">
+    <string>draw line</string>
+   </property>
+  </action>
+  <action name="actionCircle">
+   <property name="text">
+    <string>Circle</string>
+   </property>
+   <property name="toolTip">
+    <string>draw circles</string>
+   </property>
+  </action>
+  <action name="actionRectangle">
+   <property name="text">
+    <string>Rectangle</string>
+   </property>
+   <property name="toolTip">
+    <string>draw rectangles</string>
+   </property>
+  </action>
+  <action name="actionFiller">
+   <property name="text">
+    <string>Filler</string>
+   </property>
+   <property name="toolTip">
+    <string>fill areas with one colour</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <zorder>centralwidget</zorder>
+  <zorder>menubar</zorder>
+  <zorder>toolbar</zorder>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Canvas</class>
+   <extends>QWidget</extends>
+   <header>canvas.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MainWindow</class>
+   <extends>QWidget</extends>
+   <header>mainwindow.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
