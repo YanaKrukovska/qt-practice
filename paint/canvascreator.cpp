@@ -1,63 +1,25 @@
-#include "CanvasCreator.h"
+#include "canvascreator.h"
+#include "ui_canvascreator.h"
 
-int CanvasCreator::width = 800;
-int CanvasCreator::height = 800;
+int CanvasCreator::width = 500;
+int CanvasCreator::height = 500;
 
-CanvasCreator::CanvasCreator(Canvas *CanvasArea) : QWidget()
+CanvasCreator::CanvasCreator(Canvas *canvas) : QWidget(),
+                                               ui(new Ui::CanvasCreator)
 {
-    setWindowTitle("New Canvas");
-    resize(300,150);
+    ui->setupUi(this);
+    connect(ui->createButton,SIGNAL(clicked(bool)),canvas,SLOT(newCanvasArea()));
 
-    widthLabel = new QLabel;
-    heightLabel = new QLabel;
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    QFormLayout *form = new QFormLayout;
-
-    form->addRow("Width:", widthLabel);
-    form->addRow("Height:", heightLabel);
-
-    getWidthButton = new QPushButton("Set width");
-    getHeightButton = new QPushButton("Set Height");
-    createButton = new QPushButton("Create");
-
-    layout->addLayout(form);
-    layout->addWidget(getWidthButton);
-    layout->addWidget(getHeightButton);
-    layout->addWidget(createButton);
-
-    connect(getWidthButton,SIGNAL(clicked(bool)),this,SLOT(getWidthInput()));
-    connect(getHeightButton,SIGNAL(clicked(bool)),this,SLOT(getHeightInput()));
-    connect(createButton,SIGNAL(clicked(bool)),CanvasArea,SLOT(newCanvasArea()));
-    connect(createButton,SIGNAL(clicked(bool)),this,SLOT(close()));
 }
 
+CanvasCreator::~CanvasCreator()
+{
+    delete ui;
+}
 
 void CanvasCreator::showCanvas()
 {
     this->show();
-}
-
-void CanvasCreator::getWidthInput()
-{
-    bool ok;
-    int newWidth = QInputDialog::getInt(this, tr("Canvas width"),tr("Select canvas width (1-800):"), width,
-                                        1, 800, 1, &ok);
-    if (ok){
-        CanvasCreator::width = newWidth;
-        widthLabel->setText(tr("%1").arg( CanvasCreator::width));
-    }
-
-}
-void CanvasCreator::getHeightInput()
-{
-    bool ok;
-    int newHeight = QInputDialog::getInt(this, tr("Canvas height"),tr("Select canvas height (1-800):"), width,
-                                         1, 800, 1, &ok);
-    if (ok){
-        CanvasCreator::height = newHeight;
-        heightLabel->setText(tr("%1").arg(CanvasCreator::height));
-    }
 }
 
 int CanvasCreator::getWidth()
@@ -68,4 +30,31 @@ int CanvasCreator::getWidth()
 int CanvasCreator::getHeight()
 {
     return height;
+}
+
+void CanvasCreator::on_widthButton_clicked()
+{
+    bool ok;
+    int newWidth = QInputDialog::getInt(this, tr("Canvas width"),tr("Select canvas width (1-800):"), width,
+                                        1, 800, 1, &ok);
+    if (ok){
+        CanvasCreator::width = newWidth;
+        ui->widthLabel->setText(tr("Width: %1").arg(CanvasCreator::width));
+    }
+}
+
+void CanvasCreator::on_heightButton_clicked()
+{
+    bool ok;
+    int newHeight = QInputDialog::getInt(this, tr("Canvas height"),tr("Select canvas height (1-800):"), width,
+                                         1, 800, 1, &ok);
+    if (ok){
+        CanvasCreator::height = newHeight;
+        ui->heightLabel->setText(tr("Height: %1").arg(CanvasCreator::height));
+    }
+}
+
+void CanvasCreator::on_createButton_clicked()
+{
+    this->close();
 }

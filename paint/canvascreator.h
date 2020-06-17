@@ -1,31 +1,37 @@
 #ifndef CANVASCREATOR_H
 #define CANVASCREATOR_H
 
-#include <canvas.h>
+#include "canvas.h"
+#include <QWidget>
 #include <QtWidgets>
+
+namespace Ui {
+    class CanvasCreator;
+}
 
 class CanvasCreator : public QWidget
 {
     Q_OBJECT
 
 public:
-    CanvasCreator(Canvas *canvas );
+    explicit CanvasCreator(Canvas *canvas);
+    ~CanvasCreator();
     int getWidth();
     int getHeight();
 
-public slots:
-            void showCanvas();
-    void getWidthInput();
-    void getHeightInput();
-
 private:
+    Ui::CanvasCreator *ui;
     static int width;
     static int height;
-    QLabel *widthLabel;
-    QLabel *heightLabel;
-    QPushButton *getWidthButton;
-    QPushButton *getHeightButton;
-    QPushButton *createButton;
+
+public slots:
+    void showCanvas();
+
+private slots:
+    void on_widthButton_clicked();
+    void on_heightButton_clicked();
+    void on_createButton_clicked();
+
 };
 
-#endif
+#endif // CANVASCREATOR_H

@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "canvas.h"
-#include "CanvasCreator.h"
+#include "canvascreator.h"
 #include <QInputDialog>
+#include "ui_mainwindow.h"
 
 QColor MainWindow::colour = QColorConstants::Black;
 int MainWindow::brushSize = 1;
@@ -16,78 +17,38 @@ void MainWindow::setDefaultParameters()
     isErasingEnabled=0;
 }
 
-MainWindow::MainWindow()
-{
-    resize(500,500);
-    setDefaultParameters();
 
+MainWindow::MainWindow():  QMainWindow(),
+                           ui(new Ui::MainWindow)
+{
     Canvas *canvas = new Canvas(this);
     CanvasCreator *fenetretaille = new CanvasCreator(canvas);
     setCentralWidget(canvas);
 
-    QMenu *menuFile= menuBar()->addMenu("File");
-    QAction *newFileAction = new QAction("New",this);
-    menuFile->addAction(newFileAction);
-    QAction *saveFileAction = new QAction("Save",this);
-    menuFile->addAction(saveFileAction);
-    QAction *openFileAction = new QAction("Open",this);
-    menuFile->addAction(openFileAction);
-
-    connect(newFileAction,SIGNAL(triggered(bool)),fenetretaille,SLOT(showCanvas()));
-    connect(saveFileAction,SIGNAL(triggered(bool)),canvas,SLOT(saveCanvasArea()));
-    connect(openFileAction,SIGNAL(triggered(bool)),canvas,SLOT(openCanvasArea()));
-
-    QToolBar *toolBar = addToolBar("Tools");
-    QToolButton *colourButton = new QToolButton;
-    colourButton->setText("Colour");
-    toolBar->addWidget(colourButton);
-
-    QToolButton *brushSizeButton = new QToolButton;
-    brushSizeButton->setText("Brush Size");
-    toolBar->addWidget(brushSizeButton);
+    ui->setupUi(this);
 
 
-    QToolButton *brushButton = new QToolButton;
-    brushButton->setText("Brush");
-    toolBar->addWidget(brushButton);
 
+    connect(ui->actionNew, SIGNAL(triggered(bool)), fenetretaille, SLOT(showCanvas()));
+    connect(ui->actionSave, SIGNAL(triggered(bool)), canvas, SLOT(saveCanvasArea()));
+    connect(ui->actionOpen, SIGNAL(triggered(bool)), canvas, SLOT(openCanvasArea()));
+    connect(ui->actionColour,SIGNAL(triggered(bool)),this,SLOT(slotColour()));
+    connect(ui->actionBrush,SIGNAL(triggered(bool)),this,SLOT(slotDraw()));
+    connect(ui->actionBrush_Size,SIGNAL(triggered(bool)),this,SLOT(slotSize()));
+    connect(ui->actionEraser,SIGNAL(triggered(bool)),this,SLOT(slotErase()));
+    connect(ui->actionLine,SIGNAL(triggered(bool)),this,SLOT(slotDrawLine()));
+    connect(ui->actionCircle,SIGNAL(triggered(bool)),this,SLOT(slotDrawCircle()));
+    connect(ui->actionRectangle,SIGNAL(triggered(bool)),this,SLOT(slotDrawRectangle()));
 
-    QToolButton *eraserButton = new QToolButton;
-    eraserButton->setText("Eraser");
-    toolBar->addWidget(eraserButton);
+    connect(ui->actionFiller,SIGNAL(triggered(bool)),this,SLOT(slotFill()));
+    connect(ui->actionUndo,SIGNAL(triggered(bool)),canvas,SLOT(undoCanvasArea()));
+    setDefaultParameters();
 
-    QToolButton *lineButton = new QToolButton;
-    lineButton->setText("Line");
-    toolBar->addWidget(lineButton);
+}
 
-    QToolButton *circleButton = new QToolButton;
-    circleButton->setText("Circle");
-    toolBar->addWidget(circleButton);
-
-
-    QToolButton *rectangleButton = new QToolButton;
-    rectangleButton->setText("Rectangle");
-    toolBar->addWidget(rectangleButton);
-
-    QToolButton *fillButton = new QToolButton;
-    fillButton->setText("Fill");
-    toolBar->addWidget(fillButton);
-
-
-    QToolButton *undoButton = new QToolButton;
-    undoButton->setText("Undo");
-    undoButton->setShortcut(QKeySequence("Ctrl+Z"));
-    toolBar->addWidget(undoButton);
-
-    connect(colourButton,SIGNAL(clicked(bool)),this,SLOT(slotColour()));
-    connect(fillButton,SIGNAL(clicked(bool)),this,SLOT(slotFill()));
-    connect(lineButton,SIGNAL(clicked(bool)),this,SLOT(slotDrawLine()));
-    connect(brushButton,SIGNAL(clicked(bool)),this,SLOT(slotDraw()));
-    connect(eraserButton,SIGNAL(clicked(bool)),this,SLOT(slotErase()));
-    connect(circleButton,SIGNAL(clicked(bool)),this,SLOT(slotDrawCircle()));
-    connect(rectangleButton,SIGNAL(clicked(bool)),this,SLOT(slotDrawRectangle()));
-    connect(brushSizeButton,SIGNAL(clicked(bool)),this,SLOT(slotSize()));
-    connect(undoButton,SIGNAL(clicked(bool)),canvas,SLOT(undoCanvasArea()));
+MainWindow::~MainWindow()
+{
+    delete ui;
 }
 
 bool MainWindow::getIsDrawingEnabled()
@@ -127,14 +88,12 @@ int MainWindow::getBrushSize()
 
 void MainWindow::slotDraw()
 {
-
     isDrawingEnabled = 1;
     isErasingEnabled = 0;
     isRectangleEnable = 0;
     isCircleEnabled = 0;
     isFillingEnabled = 0;
     isLineEnabled = 0;
-
 }
 
 void MainWindow::slotErase()

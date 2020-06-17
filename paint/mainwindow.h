@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 
+namespace Ui {
+    class MainWindow;
+}
+
+
 class MainWindow : public QMainWindow
 {
 
@@ -14,6 +19,7 @@ public:
     static int brushSize;
 
     MainWindow();
+    ~MainWindow();
     bool getIsDrawingEnabled();
     bool getIsErasingEnabled();
     bool getIsRectangleEnabled();
@@ -27,7 +33,7 @@ public:
 
 public slots :
 
-            void slotDraw();
+    void slotDraw();
     void slotErase();
     void slotDrawRectangle();
     void slotDrawCircle();
@@ -38,6 +44,7 @@ public slots :
 
 private:
 
+    Ui::MainWindow *ui;
     bool isDrawingEnabled;
     bool isErasingEnabled;
     bool isRectangleEnable;

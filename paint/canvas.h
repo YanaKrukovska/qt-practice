@@ -10,7 +10,7 @@ class Canvas : public QWidget
 
 public :
 
-    Canvas(MainWindow *p);
+    Canvas(MainWindow *parent);
     ~Canvas();
 
     void draw();
@@ -22,13 +22,16 @@ public :
     void drawFilledRectangle();
     void drawFilledCircle();
     void fill();
-    int filling4(int x,int y,QRgb col1, QRgb col2);
+    int performFilling(int xPressed,int yPressed, QRgb chosenColour, QRgb neededColour);
 
     void paintEvent(QPaintEvent* event);
-
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
+
+    void setPenParameters();
+    void updatePainter();
+    void updatePixels();
 
 public slots:
             void newCanvasArea();
@@ -38,7 +41,6 @@ public slots:
 
 private :
     int currentPixel;
-
     int xMove;
     int yMove;
     int xPressed;
@@ -48,6 +50,7 @@ private :
     int xMax;
     int yMax;
 
+    QPen pen;
     QPainter *painter;
     QLabel *label;
     QImage *image;

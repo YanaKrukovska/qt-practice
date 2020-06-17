@@ -15,3 +15,7 @@ HEADERS  += \
     canvas.h \
     canvascreator.h \
     mainwindow.h
+
+FORMS += \
+    canvascreator.ui \
+    mainwindow.ui
