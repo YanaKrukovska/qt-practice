@@ -9,13 +9,13 @@ namespace Ui {
     class CanvasCreator;
 }
 
-class CanvasCreator : public QWidget
-{
+class CanvasCreator : public QWidget {
     Q_OBJECT
 
 public:
     explicit CanvasCreator(Canvas *canvas);
     ~CanvasCreator();
+
     int getWidth();
     int getHeight();
 
@@ -25,13 +25,14 @@ private:
     static int height;
 
 public slots:
+
     void showCanvas();
 
-private slots:
+private
+    slots:
     void on_widthButton_clicked();
     void on_heightButton_clicked();
     void on_createButton_clicked();
-
 };
 
 #endif // CANVASCREATOR_H

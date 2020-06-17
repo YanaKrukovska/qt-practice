@@ -7,19 +7,16 @@ namespace Ui {
     class MainWindow;
 }
 
-
-class MainWindow : public QMainWindow
-{
-
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-
     static QColor colour;
     static int brushSize;
 
     MainWindow();
     ~MainWindow();
+
     bool getIsDrawingEnabled();
     bool getIsErasingEnabled();
     bool getIsRectangleEnabled();
@@ -31,7 +28,7 @@ public:
     int getBrushSize();
     void setDefaultParameters();
 
-public slots :
+public slots:
 
     void slotDraw();
     void slotErase();
@@ -43,7 +40,6 @@ public slots :
     void slotSize();
 
 private:
-
     Ui::MainWindow *ui;
     bool isDrawingEnabled;
     bool isErasingEnabled;

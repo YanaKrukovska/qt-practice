@@ -4,8 +4,7 @@
 #include <mainwindow.h>
 #include <QtWidgets>
 
-class Canvas : public QWidget
-{
+class Canvas : public QWidget {
     Q_OBJECT
 
 public :
@@ -22,19 +21,20 @@ public :
     void drawFilledRectangle();
     void drawFilledCircle();
     void fill();
-    int performFilling(int xPressed,int yPressed, QRgb chosenColour, QRgb neededColour);
+    int performFilling(int xPressed, int yPressed, QRgb chosenColour, QRgb neededColour);
 
-    void paintEvent(QPaintEvent* event);
-    void mouseMoveEvent(QMouseEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-    void mouseReleaseEvent(QMouseEvent* event);
+    void paintEvent(QPaintEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
     void setPenParameters();
     void updatePainter();
     void updatePixels();
 
 public slots:
-            void newCanvasArea();
+
+    void newCanvasArea();
     void saveCanvasArea();
     void openCanvasArea();
     void undoCanvasArea();
@@ -57,7 +57,7 @@ private :
     MainWindow *window;
     QGraphicsScene *scene;
     QGraphicsView *view;
-    QVector<QPixmap*> canvasPixels;
+    QVector<QPixmap *> canvasPixels;
     QPainterPath *path;
 };
 

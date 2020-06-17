@@ -10,58 +10,99 @@
     <height>550</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QMenuBar" name="menubar">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="defaultUp">
-      <bool>false</bool>
-     </property>
-     <widget class="QMenu" name="menuFile">
-      <property name="title">
-       <string>&amp;File</string>
-      </property>
-      <addaction name="actionNew"/>
-      <addaction name="actionSave"/>
-      <addaction name="actionOpen"/>
-     </widget>
-     <addaction name="menuFile"/>
-    </widget>
-   </item>
-   <item>
-    <widget class="QToolBar" name="toolbar">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <addaction name="actionColour"/>
-     <addaction name="actionBrush"/>
-     <addaction name="actionBrush_Size"/>
-     <addaction name="actionEraser"/>
-     <addaction name="actionLine"/>
-     <addaction name="actionCircle"/>
-     <addaction name="actionRectangle"/>
-     <addaction name="actionFiller"/>
-     <addaction name="actionUndo"/>
-    </widget>
-   </item>
-   <item alignment="Qt::AlignHCenter">
-    <widget class="Canvas" name="centralwidget" native="true"/>
-   </item>
-  </layout>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>-1</y>
+     <width>500</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>100</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionOpen"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QToolBar" name="toolbar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>25</y>
+     <width>500</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>100</width>
+     <height>25</height>
+    </size>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <addaction name="actionColour"/>
+   <addaction name="actionBrush"/>
+   <addaction name="actionBrush_Size"/>
+   <addaction name="actionEraser"/>
+   <addaction name="actionLine"/>
+   <addaction name="actionCircle"/>
+   <addaction name="actionRectangle"/>
+   <addaction name="actionFiller"/>
+   <addaction name="actionUndo"/>
+  </widget>
+  <widget class="Canvas" name="centralwidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>50</y>
+     <width>500</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>10</width>
+     <height>0</height>
+    </size>
+   </property>
+  </widget>
   <action name="actionNew">
    <property name="text">
     <string>New</string>
@@ -93,7 +134,7 @@
     <string>Brush</string>
    </property>
    <property name="toolTip">
-    <string>Turn on brush mode</string>
+    <string>turn on brush mode</string>
    </property>
   </action>
   <action name="actionBrush_Size">
@@ -147,6 +188,9 @@
   <action name="actionUndo">
    <property name="text">
     <string>Undo</string>
+   </property>
+   <property name="toolTip">
+    <string>undo</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
